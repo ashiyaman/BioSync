@@ -1,7 +1,26 @@
 import { createStore } from "redux";
-import { addProfile, removeProfile } from "./actions";
+import { addProfile, calculateAverageAge, removeProfile } from "./actions";
+import profileReducer from "./profileReducer";
 
+const store = createStore(profileReducer)
 
+const renderProfiles = (profilesList) => {
+    profilesListHTML.innerHTML = profilesList.map(profile => {        
+        return `<li>${profile.id}. ${profile.name} (${profile.age} years old)</li>`
+    }
+    ).join("")
+    
+}
+
+const updateProfile = () => {
+    const state = store.getState()
+    renderProfiles(state.profiles)
+    averageAgeHTML.textContent = `Average Age: ${state.averageAge.toFixed(2)}`
+}
+
+store.subscribe(() => {
+    updateProfile()
+})
 
 const profileIdHTML = document.querySelector("#profileId")
 const nameHTML = document.querySelector("#name")
@@ -18,19 +37,25 @@ const profiles = [
     { id: 3, name: "Charlie", age: 35 }
 ]
 
-const renderProfiles = (profilesList) => {
-    profilesListHTML.innerHTML = profilesList.map(profile => 
-        `<li>${profile.id}. ${profile.name} (${profile.age} years old)</li>`
-    ).join("")
-}
+profiles.forEach(profile => {
+    store.dispatch(addProfile(profile))
+    store.dispatch(calculateAverageAge())
+})
+
+
 
 window.addProfileHandler = () => {
     const profileObj = {
-        id: profileIdHTML.value,
+        id: parseInt(profileIdHTML.value),
         name: nameHTML.value,
-        age: ageHTML.value
+        age: parseInt(ageHTML.value)
     }
-    console.log(profileObj)
+    store.dispatch(addProfile(profileObj))
+    store.dispatch(calculateAverageAge())
 }
 
-renderProfiles(profiles)
+
+
+
+
+//renderProfiles(profiles)
