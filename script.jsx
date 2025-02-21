@@ -8,8 +8,7 @@ const renderProfiles = (profilesList) => {
     profilesListHTML.innerHTML = profilesList.map(profile => {        
         return `<li>${profile.id}. ${profile.name} (${profile.age} years old)</li>`
     }
-    ).join("")
-    
+    ).join("")    
 }
 
 const updateProfile = () => {
@@ -42,8 +41,6 @@ profiles.forEach(profile => {
     store.dispatch(calculateAverageAge())
 })
 
-
-
 window.addProfileHandler = () => {
     const profileObj = {
         id: parseInt(profileIdHTML.value),
@@ -54,8 +51,6 @@ window.addProfileHandler = () => {
     store.dispatch(calculateAverageAge())
 }
 
-
-
-
-
-//renderProfiles(profiles)
+window.removeProfileHandler = () => {
+    store.dispatch(removeProfile(parseInt(removeProfileIdHTML.value)))
+}
